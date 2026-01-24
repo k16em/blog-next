@@ -44,6 +44,11 @@ const Article: NextPage = ({ params }: { params: { slug: string } }) => {
         <hr />
       </header>
       <ReactMarkdown
+        components={{
+          a: ({ node, ...props }) => (
+            <a {...props} target="_blank" rel="noopener noreferrer" />
+          ),
+        }}
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
         className="hyphens-auto content"
