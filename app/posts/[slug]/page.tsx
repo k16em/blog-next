@@ -31,11 +31,20 @@ export const generateMetadata = ({ params }: { params: { slug: string } }) => {
   };
 };
 
+const extractFootnotes = (markdown: string): Record<string, string> =>
+  Object.fromEntries(
+    [...markdown.matchAll(/\[\^([^\]]+)\]:\s*(.+)/g)].map((match) => [
+      match[1],
+      match[2],
+    ])
+  );
+
 const Article: NextPage = ({ params }: { params: { slug: string } }) => {
   const post = allPosts.find((post) => post._raw.flattenedPath === params.slug);
   if (!post) throw new Error(`Post not found for slug: ${params.slug}`);
 
   const { body } = { ...post };
+  const footnotes = extractFootnotes(body.raw);
 
   return (
     <>
@@ -44,8 +53,24 @@ const Article: NextPage = ({ params }: { params: { slug: string } }) => {
         <hr />
       </header>
       <ReactMarkdown
+        components={{
+          a: ({ node, ...props }) => {
+            const href = props.href || "";
+            if (href.startsWith("#user-content-fn-")) {
+              const id = href.replace("#user-content-fn-", "");
+              return <a {...props} title={footnotes[id]} />;
+            }
+            if (href.startsWith("#")) {
+              return <a {...props} />;
+            }
+            return <a {...props} target="_blank" rel="noopener noreferrer" />;
+          },
+        }}
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
+        remarkRehypeOptions={{
+          footnoteLabel: "注釈",
+        }}
         className="hyphens-auto content"
       >
         {body.raw}
