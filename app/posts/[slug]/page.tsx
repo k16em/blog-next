@@ -33,7 +33,7 @@ export const generateMetadata = ({ params }: { params: { slug: string } }) => {
 
 const extractFootnotes = (markdown: string): Record<string, string> =>
   Object.fromEntries(
-    [...markdown.matchAll(/\[\^([^\]]+)\]:\s*(.+)/g)].map((match) => [
+    Array.from(markdown.matchAll(/\[\^([^\]]+)\]:\s*(.+)/g)).map((match) => [
       match[1],
       match[2],
     ])
