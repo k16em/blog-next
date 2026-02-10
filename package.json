@@ -53,7 +53,7 @@
     "@types/node": "20.11.19",
     "@types/react": "18.2.55",
     "@types/rss": "^0.0.32",
-    "eslint": "8.56.0",
+    "eslint": "9.26.0",
     "eslint-config-next": "14.1.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-storybook": "^0.8.0",
